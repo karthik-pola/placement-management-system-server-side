@@ -2,8 +2,9 @@
   "name": "serverside",
   "version": "1.0.0",
   "description": "A backend for placement management system",
-  "main": "index.js",
   "type": "module",
+  "main": "index.js",
+
   "scripts": {
     "dev": "nodemon src/index.js"
   },
