@@ -27,8 +27,6 @@ const generateAccessAndRefereshTokens = async(userId) =>{
 
 
 
-
-
 const registerUser = asyncHandler(async (req , res) => {
     //get user details from frontend
     //validation -not empty
@@ -39,6 +37,7 @@ const registerUser = asyncHandler(async (req , res) => {
     //remove password and refresh token field in response
     //check if user creation
     //return res
+
     const {fullName , email , userName , password,gender,role,personalEmail,rollNo} = req.body
 
     // res.status(200).json({
@@ -103,7 +102,6 @@ const registerUser = asyncHandler(async (req , res) => {
 
 
 
-
 const loginUser = asyncHandler(async (req, res) =>{
     // req body -> data
     // username or email
@@ -165,8 +163,8 @@ const logoutUser = asyncHandler(async (req, res) => {
     User.findByIdAndUpdate(
         req.user._id,
         {
-            $set:{
-                refreshToken: undefined
+            $unset:{
+                refreshToken: 1
             }
         },
         {

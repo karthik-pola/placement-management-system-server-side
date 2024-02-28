@@ -6,16 +6,19 @@ const driveschema = new Schema(
             type: String,
             required: true
         },
+        coverImage:{
+            type: String
+        },
         description: {
             type: String,
             required: true
         },
         dateToRegister: {
-            type: Date,
+            type: String,
             required: true
         },
         lastDateToRegister: {
-            type: Date,
+            type: String,
             required: true
         },
         venue: {
@@ -33,5 +36,5 @@ const driveschema = new Schema(
     timestamps: true,
 });
 
-export const Drives = mongoose.model('JobApplication', driveschema);
+export const Drives = mongoose.model('Drives', driveschema);
 
