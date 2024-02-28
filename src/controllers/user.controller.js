@@ -39,10 +39,7 @@ const registerUser = asyncHandler(async (req , res) => {
     //remove password and refresh token field in response
     //check if user creation
     //return res
-
-
-
-    const {fullName , email , userName , password,gender,role} = req.body
+    const {fullName , email , userName , password,gender,role,personalEmail,rollNo} = req.body
 
     // res.status(200).json({
     //     message: "backend setup is successfully completed"
@@ -87,6 +84,8 @@ const registerUser = asyncHandler(async (req , res) => {
         userName: userName.toLowerCase(),
         gender,
         role,
+        personalEmail,
+        rollNo
     })
 
     const createdUser = await User.findById(user._id).select(
