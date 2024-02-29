@@ -1,4 +1,5 @@
 import { Drives } from "../models/drives.model.js";
+import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
@@ -99,6 +100,16 @@ const updateDrive = asyncHandler(async (req, res) => {
 });
 
 
+const getDrive = asyncHandler(async(req, res)=>{
+    const drives = await Drives.find();
+
+    if (!drives.length) {
+        throw new ApiError(404, "Drive not found");
+    }
+    return res.status(200).json(new ApiResponse(200, { drive: drives}));
+});
+
+
 
 
 
@@ -108,5 +119,6 @@ const updateDrive = asyncHandler(async (req, res) => {
 export {
     createDrive,
     deleteDrive,
-    updateDrive  
+    updateDrive,
+    getDrive  
 };
