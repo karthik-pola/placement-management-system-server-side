@@ -2,6 +2,7 @@ import { Router } from "express";
 import { logoutUser, registerUser,loginUser, refreshAccessToken, changeCurrentPassword, getCurrentUser, updateAccountDetails, updateUserAvatar, updateUserCoverImage } from "../controllers/user.controller.js";
 import  {upload} from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
+import { registeredBy } from "../controllers/drives.register.controller.js";
 
 
 const router = Router()
@@ -29,6 +30,8 @@ router.route("/update-account").patch(verifyJWT, updateAccountDetails)
 
 router.route("/update-user-avatar").patch(verifyJWT, upload.single("avatar"), updateUserAvatar)
 router.route("/update-user-coverImage").patch(verifyJWT, upload.single("coverImage"), updateUserCoverImage)
+
+router.route("/user-details").get(getCurrentUser)
 
 
 

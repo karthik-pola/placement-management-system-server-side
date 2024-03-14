@@ -113,5 +113,14 @@ const updateResource = asyncHandler(async (req, res) => {
 
 
 
+const getResource = asyncHandler(async (req, res) => {
+    const resources = await Resources.find();
+    if(!resources.length){
+        throw new ApiError(404, "Resource not found");
+    }
+    return res.status(200).json(new ApiResponse(200,{resources : resources}));
+});
 
-export { createResource, deleteResource , updateResource};
+
+
+export { createResource, deleteResource , updateResource ,getResource};
