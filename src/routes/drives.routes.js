@@ -7,7 +7,7 @@ import {  drivesRegistered, registerDrive, registeredBy } from "../controllers/d
 
 const router = Router();
 
-router.route('/create').post(verifyJWT ,
+router.route('/create').post(
     upload.fields( [
         {
             name: "attachments"
