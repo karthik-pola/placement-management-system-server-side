@@ -42,13 +42,13 @@ const userSchema = new Schema(
         },
         role:{
             type: String,
-            required: true ,
+            // required: true ,
         },
         personalEmail:{
             type: String,
-            unique: true,
-            lowercase: true,
-            trim: true,
+            // unique: true,
+            // lowercase: true,
+            // trim: true,
         },
         rollNo:{
             type: String,
@@ -75,7 +75,34 @@ const userSchema = new Schema(
         phoneNo:{
             type:Number,
         },
-        refreshToken:{
+        oneOne:{
+            type:String,
+        },
+        oneTwo:{
+            type:String,
+        },
+        twoTwo:{
+            type:String,
+        },
+        threeOne:{
+            type:String,
+        },
+        threeTwo:{
+            type:String,
+        },
+        fourOne:{
+            type:String,
+        },
+        fourTwo:{
+            type:String,
+        },
+        palced:{
+            type:Boolean,
+        },
+        offers:{
+            type:[String]
+        },
+        resume:{
             type:String,
         }
     },

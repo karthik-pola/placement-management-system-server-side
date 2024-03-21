@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { Drives } from "../models/drives.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
@@ -59,44 +60,63 @@ const deleteDrive = asyncHandler(async (req, res) => {
 
 
 const updateDrive = asyncHandler(async (req, res) => {
-    const { companyName, description, dateToRegister, lastDateToRegister, venue, links } = req.body;
-    const driveId = req.params;
+    const { companyName, description, dateToRegister, lastDateToRegister, venue, links ,driveId} = req.body;
+    // const driveId = req.params.driveId;
+    // console.log("Drive ID: " + driveId);
+    // const id = new mongoose.Types.ObjectId(driveId)
     // Assuming driveId is defined somewhere in your code
-    const existingDrive = await Drive.findById(driveId);
 
-    if (!existingDrive) {
-        return res.status(404).json(ApiResponse(404, {}, "Drive not found"));
-    }
+    console.log("dsbjdbfbh" ,companyName);
+    const existingDrive = await Drives.findByIdAndUpdate(driveId , 
+    {
+        $set: {
+            companyName: companyName,
+            description: description,
+            dateToRegister: dateToRegister,
+            lastDateToRegister: lastDateToRegister,
+            venue: venue,
+            links: links
+        }
+    },
+    {new:true}
+    );
 
-    if (companyName && existingDrive.companyName !== companyName) {
-        existingDrive.companyName = companyName;
-    }
-    if (description && existingDrive.description !== description) {
-        existingDrive.description = description;
-    }
-    // Handle attachments if needed
-    // ...
+//     if (!existingDrive) {
+//         return res.status(404).json(ApiResponse(404, {}, "Drive not found"));
+//     }
 
-    if (dateToRegister && existingDrive.dateToRegister !== dateToRegister) {
-        existingDrive.dateToRegister = dateToRegister;
-    }
-    if (lastDateToRegister && existingDrive.lastDateToRegister !== lastDateToRegister) {
-        existingDrive.lastDateToRegister = lastDateToRegister;
-    }
-    if (venue && existingDrive.venue !== venue) {
-        existingDrive.venue = venue;
-    }
-    if (links && existingDrive.links !== links) {
-        existingDrive.links = links;
-    }
+//     if (companyName && existingDrive.companyName !== companyName) {
+//         existingDrive.companyName = companyName;
+//     }
+//     if (description && existingDrive.description !== description) {
+//         existingDrive.description = description;
+//     }
+//     // Handle attachments if needed
+//     // ...
 
-    try {
-        await existingDrive.save({ validateBeforeSave: false });
-        return res.status(200).json(ApiResponse(200, { drive: existingDrive }, "Drive updated successfully"));
-    } catch (error) {
-        // Handle validation or save errors
-        return res.status(500).json(ApiResponse(500, {}, "Internal server error"));
-    }
+//     if (dateToRegister && existingDrive.dateToRegister !== dateToRegister) {
+//         existingDrive.dateToRegister = dateToRegister;
+//     }
+//     if (lastDateToRegister && existingDrive.lastDateToRegister !== lastDateToRegister) {
+//         existingDrive.lastDateToRegister = lastDateToRegister;
+//     }
+//     if (venue && existingDrive.venue !== venue) {
+//         existingDrive.venue = venue;
+//     }
+//     if (links && existingDrive.links !== links) {
+//         existingDrive.links = links;
+//     }
+
+//     try {
+//         await existingDrive.save({ validateBeforeSave: false });
+//         return res.status(200).json(new ApiResponse(200, { drive: existingDrive }, "Drive updated successfully"));
+//     } catch (error) {
+//         // Handle validation or save errors
+//         return res.status(500).json(new ApiResponse(500, {}, "Internal server error"));
+//     }
+// });
+
+    return res.status(200).json(new ApiResponse(200, existingDrive, "Drive updated successfully"));
 });
 
 

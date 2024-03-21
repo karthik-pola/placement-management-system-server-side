@@ -21,14 +21,22 @@ router.route('/create').post(
 
 router.delete('/delete/:driveId',verifyJWT, deleteDrive);
 
-router.route('update/:driveId').post(verifyJWT,updateDrive);
+router.route('/update').post(upload.fields( [
+    {
+        name: "attachments"
+    },
+    {
+        name:"coverImage"
+    }
+]),
+updateDrive);
 
 router.route('/').get(getDrive);
 // router.route('/').get(verifyJWT , getDrive);
 
-router.route('/register').post(verifyJWT ,  registerDrive);
+router.route('/register').patch(registerDrive);
 
-router.route('/registeredDrives').post(verifyJWT , drivesRegistered);
+router.route('/registeredDrives').post(drivesRegistered);
 
 router.route("/registeredBy").get(registeredBy)
 

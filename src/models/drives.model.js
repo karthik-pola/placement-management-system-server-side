@@ -4,7 +4,7 @@ const driveschema = new Schema(
     {
         companyName: {
             type: String,
-            required: true
+            // required: true
         },
         coverImage:{
             type: String

@@ -5,6 +5,10 @@ import { uploadOnCloudinary } from '../utils/cloudinary.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import jwt from "jsonwebtoken"
 import mongoose from "mongoose";
+import Excel from 'exceljs';
+// import Excel from 'exceljs';
+import * as xlsx from 'xlsx';
+ 
 
 
 
@@ -24,7 +28,6 @@ const generateAccessAndRefereshTokens = async(userId) =>{
         throw new ApiError(500, "Something went wrong while generating referesh and access token")
     }
 }
-
 
 
 // const registerUsers = asyncHandler(async (req , res) => {
@@ -100,10 +103,6 @@ const generateAccessAndRefereshTokens = async(userId) =>{
 //     )
 // })
 
-
-
-
-
 const registerUser = asyncHandler( async (req, res) => {
     // get user details from frontend
     // validation - not empty
@@ -117,7 +116,8 @@ const registerUser = asyncHandler( async (req, res) => {
 
 
     const {fullName , email , userName , password,gender,role,personalEmail,rollNo } = req.body
-    //console.log("email: ", email);
+    console.log("email: ", email , userName , password , gender , role , personalEmail);
+
 
     if (
         [fullName, email, userName, password].some((field) => field?.trim() === "")
@@ -184,6 +184,80 @@ const registerUser = asyncHandler( async (req, res) => {
 
 
 
+
+function readExcel(filePath) {
+    const workbook = xlsx.readFile(filePath);
+    const sheetName = workbook.SheetNames[0]; // Assuming data is in the first sheet
+    const sheet = workbook.Sheets[sheetName];
+    return xlsx.utils.sheet_to_json(sheet);
+}
+
+// // Function to create users from parsed data
+// function createMultipleUsers(req, res) {
+//     const filePath = req.file?.path;
+//     try {
+//         const userData = readExcel(filePath);
+//         for (const data of userData) {
+//             // Create user document based on your schema
+//             const user = new User({
+//                 userName: data.userName,
+//                 email: data.email,
+//                 fullName: data.fullName,
+//                 // Add other fields as needed
+//             });
+//             // Save user to database
+//             const usedata = user.save();
+//             console.log(`User ${data.userName} created successfully.`);
+//         }
+//         console.log("All users created successfully.");
+//     } catch (error) {
+//         console.error("Error creating users:", error);
+//     }
+// }
+
+
+const createUserFromExcel = async (req, res) => {
+    const excelFilePath = req.file?.path;
+
+    
+
+    const workbook = new Excel.Workbook();
+    await workbook.xlsx.readFile(excelFilePath);
+
+    const worksheet = workbook.getWorksheet(1);
+
+    for (let rowNumber = 2; rowNumber <= worksheet.rowCount; rowNumber++) {
+        const row = worksheet.getRow(rowNumber);
+        if (!row) {
+            console.log('Row not found, breaking loop.');
+            break; 
+        }
+
+        console.log(row.values);
+
+        const [userName, fullName, email, rollNo,password,personalEmail] = row.values.slice(1, 7); // Adjust slice indices based on your Excel structure
+        const newUser = new User({
+            userName:String(userName),
+            fullName:String(fullName.text),
+            email:String(email.text),
+            rollNo:String(rollNo),
+            password:String(password),
+            personalEmail:String(personalEmail.text)
+        });
+        try {
+            await newUser.save();
+            console.log(`User with email ${email.text} created successfully.`);
+        
+        } catch (error) {
+            console.error(`Error creating user: ${error.message}`);
+            // You can choose to handle errors as per your application's requirements
+        }
+    }
+
+    return res.status(200).json({
+        message: 'Users created successfully'
+    });
+};
 
 
 // const loginUser = asyncHandler(async (req, res) =>{
@@ -265,17 +339,21 @@ const loginUser = asyncHandler(async (req, res) =>{
         
     // }
 
-    const user = await User.findOne({
-        $or: [{username}, {email}]
-    })
+    // const user = await User.findOne({
+    //     $or: [{username}, {email}]
+    // })
+
+    const user = await User.findOne({"email": email})
 
     if (!user) {
         throw new ApiError(404, "User does not exist")
     }
 
+    console.log(user);
+
    const isPasswordValid = await user.isPasswordCorrect(password)
 
-   if (isPasswordValid) {
+   if (!isPasswordValid) {
     throw new ApiError(401, "Invalid user credentials")
     }
 
@@ -303,7 +381,6 @@ const loginUser = asyncHandler(async (req, res) =>{
     )
 
 })
-
 
 
 const logoutUser = asyncHandler(async (req, res) => {
@@ -510,6 +587,30 @@ const getUser = asyncHandler(async(req,res) => {
     return user;
 })
 
+
+const getStudentData = asyncHandler(async(req,res) => {
+    const data  = await User.find();
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200
+            ,data
+            ,
+            "data fetched succesfully"
+            )
+    )
+});
+
+const deleteUser = asyncHandler(async(req,res) => {
+    const user_id = req.params.user_id;
+    const deletedUser = await User.findByIdAndDelete(user_id);
+    if(!deletedUser){
+        return res.status(404).json(new ApiError(400,"user not found"));
+    }
+
+    res.status(200).json(new ApiResponse(200,deletedUser));
+});
  
 
 export { 
@@ -521,5 +622,8 @@ export {
     getCurrentUser,
     updateAccountDetails,
     updateUserAvatar,
-    updateUserCoverImage
+    updateUserCoverImage,
+    createUserFromExcel,
+    getStudentData,
+    deleteUser
 }

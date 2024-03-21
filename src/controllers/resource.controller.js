@@ -46,16 +46,22 @@ const createResource = asyncHandler(async (req, res) => {
     );
 });
 
-const deleteResource = asyncHandler(async (req,res) =>{
-    const resource_id = req.params
-    const deletedResource = Resources.findByIdAndDelete(resource_id);
+const deleteResource = asyncHandler(async (req, res) => {
+    const resource_id = req.params.resource_id;
+    console.log(typeof resource_id);
 
-    if(!deletedResource){
-        return res.status(404).json(new ApiError(400,"resource not found"));
+    // Use await to execute the query and get the deleted resource
+    const deletedResource = await Resources.findByIdAndDelete(resource_id);
+
+    // Check if the resource was found and deleted
+    if (!deletedResource) {
+        return res.status(404).json(new ApiError(400, "Resource not found"));
     }
 
+    // Send the deleted resource in the response
     res.status(200).json(new ApiResponse(200, deletedResource));
-})
+});
+
 
 const updateResource = asyncHandler(async (req, res) => {
     const resourceId = req.params.resourceId; // Assuming you are passing resourceId in the URL

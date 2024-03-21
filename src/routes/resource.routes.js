@@ -7,7 +7,6 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 const router = Router();
 
 router.route('/create').post(
-    verifyJWT,
     upload.fields([
         {
             name: "attachments"
@@ -19,10 +18,9 @@ router.route('/create').post(
     createResource
 );
 
-// router.route('/delete').delete({
-//     verifyJWT,
-//     deleteResource
-// })
+router.route('/delete/:resource_id').delete(
+    deleteResource
+)
 
 router.route("/").get(getResource);
 

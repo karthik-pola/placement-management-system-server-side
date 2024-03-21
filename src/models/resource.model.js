@@ -9,14 +9,14 @@ const resourceSchema = new Schema(
         coverImage:{
             type: "string"
         },
-        resourceFile:{
+        attachments:{
             type: ["string"]
         },
         description:{
             type: "string"
         },
         links:{
-            type: ["string"]
+            type: ["string"] 
         }
     },
     {

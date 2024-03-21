@@ -43,4 +43,5 @@ router.route("/update-account").patch(verifyJWT, updateAccountDetails)
 router.route("/avatar").patch(verifyJWT, upload.single("avatar"), updateAdminAvatar)
 router.route("/cover-image").patch(verifyJWT, upload.single("coverImage"), updateAdminCoverImage)
 
+
 export default router
