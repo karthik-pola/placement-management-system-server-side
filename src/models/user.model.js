@@ -46,6 +46,7 @@ const userSchema = new Schema(
         },
         personalEmail:{
             type: String,
+            default: '-'
             // unique: true,
             // lowercase: true,
             // trim: true,
@@ -59,45 +60,59 @@ const userSchema = new Schema(
         address:{
             type: String,
             lowercase: true,
+            default: '-'
         },
         gender:{
             type:String,
+            default: '-'
         },
         course:{
             type:String,
+            default: '-'
         },
         about:{
             type:String,
+            default: '-'
         },
         department:{
             type:String,
+            default: '-'
         },
         phoneNo:{
-            type:Number,
+            type:String,
+            default: '-'
         },
         oneOne:{
             type:String,
+            default: '-'
         },
         oneTwo:{
             type:String,
+            default: '-'
         },
         twoTwo:{
             type:String,
+            default: '-'
         },
         threeOne:{
             type:String,
+            default: '-'
         },
         threeTwo:{
             type:String,
+            default: '-'
         },
         fourOne:{
             type:String,
+            default: '-'
         },
         fourTwo:{
             type:String,
+            default: '-'
         },
         palced:{
             type:Boolean,
+            default: 'false'
         },
         offers:{
             type:[String]

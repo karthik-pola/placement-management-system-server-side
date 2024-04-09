@@ -11,11 +11,13 @@ import stream from 'stream';
 // import mongoose,{Aggregate, Schema} from "mongoose";
 
 const registerDrive = asyncHandler(async (req, res) => {
-    const { company } = req.body;
+    const drive_id = req.body.drive_id;
     const user = req.user?._id;
+
+    console.log(drive_id , user);
     
     const driveRegistered = await DrivesRegister.create({
-        company,
+        company:drive_id,
         user
     });
 
@@ -92,7 +94,7 @@ const drivesRegistered = asyncHandler(async (req, res) => {
 
 const registeredBy  = asyncHandler(async(req, res) => {
     const driveId = req.body.driveId;
-
+    console.log(driveId);
 
     try {
         const data = await Drives.aggregate([

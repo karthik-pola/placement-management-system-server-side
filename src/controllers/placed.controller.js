@@ -86,6 +86,54 @@ const getPlacedStudentsCount = async (req, res) => {
 
 
 
+// const getUserAndDriveDetailsForPlacedStudents = async (req, res) => {
+//     try {
+//         const placedStudentsWithDetails = await PlacedStudent.aggregate([
+//             {
+//                 $lookup: {
+//                     from: "users",
+//                     localField: "userId",
+//                     foreignField: "_id",
+//                     as: "user"
+//                 }
+//             },
+//             // {
+//             //     $project:{
+//             //         user:1
+//             //     }
+//             // }
+//             // {
+//             //     $unwind: "$user"
+//             // },
+//             // {
+//             //     $lookup: {
+//             //         from: "drives",
+//             //         localField: "driveId",
+//             //         foreignField: "_id",
+//             //         as: "drive"
+//             //     }
+//             // },
+//             // {
+//             //     $unwind: "$drive"
+//             // },
+//             // {
+//             //     $project: {
+//             //         fullName: "$user.fullName",
+//             //         rollNo: "$user.rollNo",
+//             //         // companyName: "$drive.companyName"
+//             //     }
+//             // }
+//         ]);
+
+//         return res.status(200).json(placedStudentsWithDetails);
+//     } catch (error) {
+//         return res.status(500).json({ error: error.message });
+//     }
+// };
+
+
+
+
 const getUserAndDriveDetailsForPlacedStudents = async (req, res) => {
     try {
         const placedStudentsWithDetails = await PlacedStudent.aggregate([
@@ -125,6 +173,7 @@ const getUserAndDriveDetailsForPlacedStudents = async (req, res) => {
         return res.status(500).json({ error: error.message });
     }
 };
+
 
 
 

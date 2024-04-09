@@ -4,11 +4,13 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 const createAlert = asyncHandler(async (req,res) =>{
-    const {message , createdBy} = req.body;
-
+    const {message} = req.body;
+    const user = req?.admin || req?.user
+    console.log(user);
     const alert = await Alert.create ({
         message,
-        createdBy
+        createdBy: user.username,
+        avatar:user?.avatar
     });
 
     if(!alert){

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { logoutUser, registerUser,loginUser, refreshAccessToken, changeCurrentPassword, getCurrentUser, updateAccountDetails, updateUserAvatar, updateUserCoverImage,  createUserFromExcel, getStudentData, deleteUser } from "../controllers/user.controller.js";
+import { logoutUser, registerUser,loginUser, refreshAccessToken, changeCurrentPassword, getCurrentUser, updateAccountDetails, updateUserAvatar, updateUserCoverImage,  createUserFromExcel, getStudentData, deleteUser, updateEducationalDetails, updatePersonalDetails } from "../controllers/user.controller.js";
 import  {upload} from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { registeredBy } from "../controllers/drives.register.controller.js";
@@ -38,6 +38,10 @@ router.route("/createUser").post(upload.single("userData"),createUserFromExcel);
 router.route("/studentData").get(getStudentData);
 
 router.route("/deleteUser/:user_id").delete(deleteUser);
+
+router.route("/update/educationalDetails").post(verifyJWT ,updateEducationalDetails)
+
+router.route("/update/personalDetails").post(verifyJWT ,updatePersonalDetails);
 
 
 

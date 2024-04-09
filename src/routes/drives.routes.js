@@ -21,7 +21,7 @@ router.route('/create').post(
 
 router.delete('/delete/:driveId',verifyJWT, deleteDrive);
 
-router.route('/update').post(upload.fields( [
+router.route('/update/:driveId').post(upload.fields( [
     {
         name: "attachments"
     },
@@ -34,7 +34,7 @@ updateDrive);
 router.route('/').get(getDrive);
 // router.route('/').get(verifyJWT , getDrive);
 
-router.route('/register').patch(registerDrive);
+router.route('/register').post(verifyJWT ,registerDrive);
 
 router.route('/registeredDrives').post(drivesRegistered);
 

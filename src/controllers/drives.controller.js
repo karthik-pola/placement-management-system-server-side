@@ -4,6 +4,67 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import nodemailer from 'nodemailer';
+import Mailgen from "mailgen";
+import { generateMail } from "../middlewares/mail.middleware.js";
+import { User } from "../models/user.model.js";
+
+
+
+// const generateMail = async (Name, Intro, Message, Outro) => {
+//     let config = {
+//         service: 'gmail',
+//         auth: {
+//             user: 'placement4645@gmail.com',
+//             pass: 'oawywnmrvnbwmyvl',
+//         }
+//     }
+
+//     const transporter = nodemailer.createTransport(config);
+
+//     let MailGenerator = new Mailgen({
+//         theme: "default",
+//         product: {
+//             name: "Training and placement department",
+//             link: "https://mailgen.js/"
+//         }
+//     })
+
+//     let response = {
+//         body: {
+//             name: Name,
+//             intro: Intro,
+//             action: {
+//                 instructions: Message,
+//                 button: {
+//                     color: '#22BC66',
+//                     text: 'Register for the new drive',
+//                     link: 'https://your-website.com/register'
+//                 }
+//             },
+//             outro: Outro
+//         }
+//     }
+
+//     let mail = MailGenerator.generate(response);
+
+//     let message = {
+//         from: 'placement2024@gmail.com',
+//         to: "karthikpola07@gmail.com",
+//         subject: "New Drive Notification",
+//         html: mail
+//     }
+
+//     transporter.sendMail(message)
+//         .then(() => {
+//             return console.log("Mail sent successfully")
+//         })
+//         .catch(err => {
+//             console.log(err);
+//         })
+// }
+
+
 
 const createDrive = asyncHandler(async (req, res) => {
     const { companyName, description, dateToRegister, lastDateToRegister, venue, links } = req.body;
@@ -32,11 +93,23 @@ const createDrive = asyncHandler(async (req, res) => {
     });
 
     
+    
     const createDrive  = await Drives.findById(drive._id);
     if (!createDrive) {
-        throw new Apierror(500, "Something went wrong while creating the drive !!!")
+        throw new ApiError(500, "Something went wrong while creating the drive !!!")
     }
     console.log(createDrive);
+
+    const users = await User.find();
+
+    console.log(users);
+
+    users.map(user =>{
+        console.log(user.email);
+        generateMail(user.email , "Pola" , "new drive has been created" , description , `Form closes at ${lastDateToRegister}`)
+    });
+
+    
     res.status(201).json(
         new ApiResponse(200, createDrive,"Drive created successfully")
     )
@@ -60,7 +133,8 @@ const deleteDrive = asyncHandler(async (req, res) => {
 
 
 const updateDrive = asyncHandler(async (req, res) => {
-    const { companyName, description, dateToRegister, lastDateToRegister, venue, links ,driveId} = req.body;
+    const { companyName, description, dateToRegister, lastDateToRegister, venue, links} = req.body;
+    const driveId = req.params.driveId;
     // const driveId = req.params.driveId;
     // console.log("Drive ID: " + driveId);
     // const id = new mongoose.Types.ObjectId(driveId)

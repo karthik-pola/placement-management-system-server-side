@@ -20,6 +20,7 @@ const generateAccessAndRefereshTokens = async(userId) =>{
 
         user.refreshToken = refreshToken
         await user.save({ validateBeforeSave: false })
+        
 
         return {accessToken, refreshToken}
 
@@ -360,6 +361,7 @@ const loginUser = asyncHandler(async (req, res) =>{
    const {accessToken, refreshToken} = await generateAccessAndRefereshTokens(user._id)
 
     const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
+    console.log(accessToken , refreshToken)
 
     const options = {
         httpOnly: true,
@@ -513,6 +515,86 @@ const updateAccountDetails = asyncHandler(async(req, res) => {
     .json(new ApiResponse(200, user, "Account details updated successfully"))
 });
 
+
+
+const updateEducationalDetails = asyncHandler(async(req, res) => {
+    // const User = req.user;
+    const {oneOne , oneTwo ,twoOne , twoTwo ,threeOne , threeTwo ,fourOne , fourTwo} = req.body
+
+    console.log(`User ${oneOne} ${oneTwo}`)
+    
+
+    // if (!fullName || !email) {
+    //     throw new ApiError(400, "All fields are required")
+    // }
+
+    const user = await User.findByIdAndUpdate(
+        req.user?._id,
+        {
+            $set: {
+                oneOne : oneOne || req.user.oneOne,
+                oneTwo : oneTwo || req.user.oneTwo,
+                twoOne : twoOne || req.user.twoOne,
+                twoTwo : twoTwo || req.user.twoTwo,
+                threeOne : threeOne || req.user.threeOne,
+                threeTwo : threeTwo || req.user.threeTwo,
+                fourOne : fourOne || req.user.fourOne,
+                fourTwo : fourTwo || req.user.fourTwo,
+            }
+        },
+        {new: true}
+        
+    ).select("-password")
+
+    // console.log(user)
+
+    return res
+    .status(200)
+    .json(new ApiResponse(200, user, "Educational details updated successfully"))
+});
+
+
+
+const updatePersonalDetails = asyncHandler(async(req, res) => {
+    // const User = req.user;
+    const {department , email ,gender , rollNo ,phoneNo , placed ,personalEmail , course ,address,fullName} = req.body
+    
+
+    // if (!fullName || !email) {
+    //     throw new ApiError(400, "All fields are required")
+    // }
+
+    const user = await User.findByIdAndUpdate(
+        req.user?._id,
+        {
+            $set: {
+                department : department || req.user.department,
+                email : email || req.user.email,
+                gender : gender || req.user.gender,
+                rollNo : rollNo || req.user.rollNo,
+                phoneNo : phoneNo || req.user.phoneNo,
+                placed : placed || req.user.placed,
+                personalEmail : personalEmail || req.user.personalEmail,
+                course : course || req.user.course,
+                address : address || req.user.address,
+                fullName : fullName || req.user.fullName,
+            }
+        },
+        {new: true}
+        
+    ).select("-password")
+
+    // console.log(user)
+
+    return res
+    .status(200)
+    .json(new ApiResponse(200, user, "Educational details updated successfully"))
+});
+
+
+
+
+
 const updateUserAvatar = asyncHandler(async(req, res) => {
     const avatarLocalPath = req.file?.path
 
@@ -625,5 +707,7 @@ export {
     updateUserCoverImage,
     createUserFromExcel,
     getStudentData,
-    deleteUser
+    deleteUser,
+    updateEducationalDetails,
+    updatePersonalDetails,
 }
