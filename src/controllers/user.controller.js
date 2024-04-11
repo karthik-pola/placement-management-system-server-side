@@ -8,6 +8,7 @@ import mongoose from "mongoose";
 import Excel from 'exceljs';
 // import Excel from 'exceljs';
 import * as xlsx from 'xlsx';
+import { generateMail } from '../middlewares/mail.middleware.js';
  
 
 
@@ -177,6 +178,8 @@ const registerUser = asyncHandler( async (req, res) => {
         throw new ApiError(500, "Something went wrong while registering the user")
     }
 
+    generateMail(createdUser.email , createdUser.userName , "your account have been created successfully" ,"visit our site a access all the features" ,"Click Here " , "for more details visit our site")
+
     return res.status(201).json(
         new ApiResponse(200, createdUser, "User registered Successfully")
     )
@@ -239,17 +242,19 @@ const createUserFromExcel = async (req, res) => {
         const [userName, fullName, email, rollNo,password,personalEmail] = row.values.slice(1, 7); // Adjust slice indices based on your Excel structure
         const newUser = new User({
             userName:String(userName),
-            fullName:String(fullName.text),
-            email:String(email.text),
+            fullName:String(fullName),
+            email:String(email?.text),
             rollNo:String(rollNo),
             password:String(password),
-            personalEmail:String(personalEmail.text)
+            personalEmail:String(personalEmail?.text)
         });
         try {
             await newUser.save();
             console.log(`User with email ${email.text} created successfully.`);
+            generateMail(email?.text , userName , "your account have been created successfully" ,"visit our site a access all the features" ,"Click Here " , "for more details visit our site")
+        }
         
-        } catch (error) {
+        catch (error) {
             console.error(`Error creating user: ${error.message}`);
             // You can choose to handle errors as per your application's requirements
         }
