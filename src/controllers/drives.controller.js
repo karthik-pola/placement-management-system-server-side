@@ -106,7 +106,7 @@ const createDrive = asyncHandler(async (req, res) => {
 
     users.map(user =>{
         console.log(user.email);
-        generateMail(user.email , "Pola" , "new drive has been created" , description , `Form closes at ${lastDateToRegister}`)
+        generateMail(user.email , "Pola" , "new drive has been created" , description ,"apply now ",  `Form closes at ${lastDateToRegister}` )
     });
 
     

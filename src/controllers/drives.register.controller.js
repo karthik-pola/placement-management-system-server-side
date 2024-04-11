@@ -78,7 +78,7 @@ const drivesRegistered = asyncHandler(async (req, res) => {
                 }
             },
         ]);
-
+        console.log("registered drives" , data);
         if (!data?.length) {
             throw new ApiError(404, "No drives registered for this user");
         }
@@ -88,6 +88,68 @@ const drivesRegistered = asyncHandler(async (req, res) => {
         throw new ApiError(500, "Error fetching drives registered for the user", error);
     }
 });
+
+
+// const drivesRegisteredByStudent = asyncHandler(async(req, res) =>{
+//     const  user = req.user;
+//     const data = await User.aggregate([
+//         {
+//             $match: {
+//                 _id: user._id
+//             }
+//         },
+//         {
+//             $lookup: {
+//                 from: "drivesregisters",
+//                 localField: "_id",
+//                 foreignField: "user",
+//                 as: "drivesRegistered"
+//             }
+//         }
+//     ])
+
+//     console.log(data)
+// })
+
+
+// const drivesRegisteredByStudent = asyncHandler(async(req, res) =>{
+//     const  user = req.user;
+//     const data = await User.aggregate([
+//         {
+//             $match: {
+//                 _id: user._id
+//             }
+//         },
+//         {
+//             $lookup: {
+//                 from: "drivesregisters",
+//                 localField: "_id",
+//                 foreignField: "user",
+//                 as: "drivesRegistered"
+//             }
+//         }
+//     ]);
+
+//     console.log(data);
+// });
+
+
+const drivesRegisteredByStudent = asyncHandler(async (req, res) => {
+    try {
+        const user = req.user;
+        console.log(user);
+        
+        const data = await DrivesRegister.find({ user: user?._id });
+        
+        console.log(data[0]);
+        res.status(200).json(data);
+    } catch (error) {
+        // If an error occurs during the execution of the function, it will be caught here
+        console.error('Error fetching drive registration data:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
 
 
 
@@ -212,5 +274,6 @@ const registeredBy  = asyncHandler(async(req, res) => {
 export {
     registerDrive,
     drivesRegistered,
-    registeredBy
+    registeredBy,
+    drivesRegisteredByStudent
 };
