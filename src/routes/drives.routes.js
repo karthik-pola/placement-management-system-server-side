@@ -2,7 +2,7 @@ import { Router } from "express";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { createDrive, deleteDrive, getDrive, updateDrive } from "../controllers/drives.controller.js";
-import {  drivesRegistered, drivesRegisteredByStudent, registerDrive, registeredBy } from "../controllers/drives.register.controller.js";
+import {  drivesRegistered, drivesRegisteredByStudent, fetchUsersByDriveId, registerDrive, registeredBy } from "../controllers/drives.register.controller.js";
 
 
 const router = Router();
@@ -38,6 +38,6 @@ router.route('/register').post(verifyJWT ,registerDrive);
 
 router.route('/registeredDrives').post(verifyJWT , drivesRegisteredByStudent);
 
-router.route("/registeredBy").get(registeredBy)
+router.route("/registeredBy/:drive_id").get(fetchUsersByDriveId)
 
 export default router

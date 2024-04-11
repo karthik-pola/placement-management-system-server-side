@@ -192,6 +192,9 @@ const registeredBy  = asyncHandler(async(req, res) => {
             }
         ]);
 
+
+        res.status(200).json(data);
+
         // const workbook = new Excel.Workbook();
         // const worksheet = workbook.addWorksheet('DriveDetails');
 
@@ -226,35 +229,35 @@ const registeredBy  = asyncHandler(async(req, res) => {
         //res.status(200).json(data); // Assuming you want to send the data as a response
 
 
-        const workbook = new Excel.Workbook();
-        const worksheet = workbook.addWorksheet('DriveDetails');
+        // const workbook = new Excel.Workbook();
+        // const worksheet = workbook.addWorksheet('DriveDetails');
 
-        // Dynamically set columns based on userDetails fields
-        if (data.length > 0 && data[0].userDetails.length > 0) {
-            const userDetailsFields = Object.keys(data[0].userDetails[0]);
-            worksheet.columns = userDetailsFields.map(field => ({ header: field, key: field }));
-        }
+        // // Dynamically set columns based on userDetails fields
+        // if (data.length > 0 && data[0].userDetails.length > 0) {
+        //     const userDetailsFields = Object.keys(data[0].userDetails[0]);
+        //     worksheet.columns = userDetailsFields.map(field => ({ header: field, key: field }));
+        // }
 
-        // Add data to the worksheet
-        data.forEach(item => {
-            item.userDetails.forEach(userDetail => {
-                worksheet.addRow(userDetail);
-            });
-        });
+        // // Add data to the worksheet
+        // data.forEach(item => {
+        //     item.userDetails.forEach(userDetail => {
+        //         worksheet.addRow(userDetail);
+        //     });
+        // });
 
-        // Create a buffer stream to write the workbook to
-        const bufferStream = new stream.PassThrough();
-        workbook.xlsx.write(bufferStream)
-            .then(() => {
-                bufferStream.end();
-            });
+        // // Create a buffer stream to write the workbook to
+        // const bufferStream = new stream.PassThrough();
+        // workbook.xlsx.write(bufferStream)
+        //     .then(() => {
+        //         bufferStream.end();
+        //     });
 
-        // Set response headers for Excel file download
-        res.setHeader('Content-Disposition', 'attachment; filename="drive_details.xlsx"');
-        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        // // Set response headers for Excel file download
+        // res.setHeader('Content-Disposition', 'attachment; filename="drive_details.xlsx"');
+        // res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 
-        // Pipe the buffer stream to the response object
-        bufferStream.pipe(res);
+        // // Pipe the buffer stream to the response object
+        // bufferStream.pipe(res);
 
 
         
@@ -262,6 +265,110 @@ const registeredBy  = asyncHandler(async(req, res) => {
         throw new ApiError(500, "Error fetching drive details", error);
     }
 });
+
+
+
+
+// import { DrivesRegister } from './path/to/drivesRegisterModel';
+
+// const fetchUsersByDriveId = asyncHandler(async(req , res) => {
+//     const driveId = req.body.drive_id;
+//     console.log(driveId);
+//     try {
+//         const users = await DrivesRegister.aggregate([
+//             {
+//                 $match: {
+//                     company: new mongoose.Types.ObjectId(driveId) // Assuming driveId is provided by the user
+//                 }
+//             },
+//             {
+//                 $lookup: {
+//                     from: 'users', // Assuming the collection name is 'users' where user details are stored
+//                     localField: 'user',
+//                     foreignField: '_id',
+//                     as: 'userDetails'
+//                 }
+//             },
+//             {
+//                 $project: {
+//                     userDetails: 1 // Project only the userDetails field
+//                 }
+//             }
+//         ]);
+//         // return users;
+//         console.log(users);
+//         res.status(200).json(users);
+//     } catch (error) {
+//         console.error('Error fetching users:', error);
+//         throw error;
+//     }
+// })
+
+
+const fetchUsersByDriveId = asyncHandler(async(req , res) => {
+    const driveId = req.params.drive_id;
+    console.log(driveId);
+    try {
+        const users = await DrivesRegister.aggregate([
+            {
+                $match: {
+                    company: new mongoose.Types.ObjectId(driveId) // Assuming driveId is provided by the user
+                }
+            },
+            {
+                $lookup: {
+                    from: 'users', // Assuming the collection name is 'users' where user details are stored
+                    localField: 'user',
+                    foreignField: '_id',
+                    as: 'userDetails'
+                }
+            },
+            {
+                $unwind: '$userDetails'
+            },
+            {
+                $project: {
+                    _id: '$userDetails._id',
+                    userName: '$userDetails.userName',
+                    email: '$userDetails.email',
+                    fullName: '$userDetails.fullName',
+                    avatar: '$userDetails.avatar',
+                    coverImage: '$userDetails.coverImage',
+                    password: '$userDetails.password',
+                    role: '$userDetails.role',
+                    personalEmail: '$userDetails.personalEmail',
+                    rollNo: '$userDetails.rollNo',
+                    address: '$userDetails.address',
+                    gender: '$userDetails.gender',
+                    course: '$userDetails.course',
+                    about: '$userDetails.about',
+                    department: '$userDetails.department',
+                    phoneNo: '$userDetails.phoneNo',
+                    oneOne: '$userDetails.oneOne',
+                    oneTwo: '$userDetails.oneTwo',
+                    twoTwo: '$userDetails.twoTwo',
+                    threeOne: '$userDetails.threeOne',
+                    threeTwo: '$userDetails.threeTwo',
+                    fourOne: '$userDetails.fourOne',
+                    fourTwo: '$userDetails.fourTwo',
+                    palced: '$userDetails.palced',
+                    offers: '$userDetails.offers',
+                    createdAt: '$userDetails.createdAt',
+                    updatedAt: '$userDetails.updatedAt',
+                    __v: '$userDetails.__v'
+                }
+            }
+        ]);
+        
+        console.log(users);
+        res.status(200).json(users);
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        throw error;
+    }
+});
+
+
 
 
 
@@ -275,5 +382,6 @@ export {
     registerDrive,
     drivesRegistered,
     registeredBy,
-    drivesRegisteredByStudent
+    drivesRegisteredByStudent,
+    fetchUsersByDriveId
 };
