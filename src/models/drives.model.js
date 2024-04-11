@@ -30,7 +30,12 @@ const driveschema = new Schema(
         },
         attachments: {
             type: [String]
-        }
+        },
+        cutOff: {
+            type: Number,
+            required: true
+        },
+        
     },
 {
     timestamps: true,

@@ -26,7 +26,7 @@ export const verifyJWT = asyncHandler(async(req,_,next) => {
                 throw new ApiError(401, "Unauthorized: admin not found")
             }
         
-            req.admin = admin;
+            req.user = admin;
         }
         else{
             console.log("decodedToken :" ,decodedToken);

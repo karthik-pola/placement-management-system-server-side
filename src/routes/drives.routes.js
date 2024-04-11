@@ -31,7 +31,7 @@ router.route('/update/:driveId').post(upload.fields( [
 ]),
 updateDrive);
 
-router.route('/').get(getDrive);
+router.route('/').get(verifyJWT , getDrive);
 // router.route('/').get(verifyJWT , getDrive);
 
 router.route('/register').post(verifyJWT ,registerDrive);

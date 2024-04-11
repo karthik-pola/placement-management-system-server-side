@@ -119,7 +119,11 @@ const userSchema = new Schema(
         },
         resume:{
             type:String,
-        }
+        },
+        percentage:{
+            type:Number,
+            default: '0'
+        },
     },
     {
         timestamps: true,

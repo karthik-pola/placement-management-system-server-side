@@ -194,14 +194,113 @@ const updateDrive = asyncHandler(async (req, res) => {
 });
 
 
-const getDrive = asyncHandler(async(req, res)=>{
+// const getDrive = asyncHandler(async(req, res)=>{
+//     const drives = await Drives.find();
+//     const user = req?.user;
+//     if(user.role === 'admin'){
+//     if (!drives.length) {
+//         throw new ApiError(404, "Drive not found");
+//     }
+//     return res.status(200).json(new ApiResponse(200, { drive: drives}));
+//     }
+//     else{
+//         if (!drives.length) {
+//             throw new ApiError(404, "Drive not found");
+//         }
+//         return res.status(200).json(new ApiResponse(200, { drive: drives}));
+//         }   
+//     }
+// );
+
+// const getDrive = asyncHandler(async (req, res) => {
+//     const drives = await Drives.find();
+//     const user = User.findById( req?.user._id);
+//     console.log(user._id);
+    
+//     if (!drives.length) {
+//         throw new ApiError(404, "Drive not found");
+//     }
+
+//     if (user.role === 'admin') {
+//         return res.status(200).json(new ApiResponse(200, { drive: drives }));
+//     } else {
+//         // Filter drives based on cutoff percentage
+//         const filteredDrives = drives.filter(drive => drive.cutoff <= user.percentage);
+
+//         if (!filteredDrives.length) {
+//             throw new ApiError(404, "No drives match cutoff percentage");
+//         }
+
+//         return res.status(200).json(new ApiResponse(200, { drive: filteredDrives }));
+//     }
+// });
+
+
+// const getDrive = asyncHandler(async (req, res) => {
+//     const drives = await Drives.find();
+//     const user = req?.user // Await the result of the query
+//     // console.log(user._id);
+
+//     if (!drives.length) {
+//         throw new ApiError(404, "Drive not found");
+//     }
+
+//     if (!user) {
+//         throw new ApiError(404, "User not found");
+//     }
+
+//     if (user.role === 'admin') {
+//         return res.status(200).json(new ApiResponse(200, { drive: drives }));
+//     } else {
+
+//         const student = await User.findById(req?.user._id);
+//         // Filter drives based on cutoff percentage
+//         const filteredDrives = drives.filter(drive <= drive.cutOff <= student.percentage);
+
+//         if (!filteredDrives.length) {
+//             throw new ApiError(404, "No drives match cutoff percentage");
+//         }
+
+//         return res.status(200).json(new ApiResponse(200, { drive: filteredDrives }));
+//     }
+// });
+
+
+const getDrive = asyncHandler(async (req, res) => {
     const drives = await Drives.find();
+    const user = req?.user;
 
     if (!drives.length) {
         throw new ApiError(404, "Drive not found");
     }
-    return res.status(200).json(new ApiResponse(200, { drive: drives}));
+
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+
+    if (user.role === 'admin') {
+        return res.status(200).json(new ApiResponse(200, { drive: drives }));
+    } else {
+        const student = await User.findById(req?.user._id);
+        console.log(student);
+        if (!student) {
+            throw new ApiError(404, "Student not found");
+        }
+
+        // Filter drives based on cutoff percentage
+        const filteredDrives = drives.filter(drive => drive.cutOff <= student.percentage);
+
+        if (!filteredDrives.length) {
+            throw new ApiError(404, "No drives match cutoff percentage");
+        }
+
+        return res.status(200).json(new ApiResponse(200, { drive: filteredDrives }));
+    }
 });
+
+
+
+
 
 
 
