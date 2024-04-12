@@ -117,7 +117,7 @@ const registerUser = asyncHandler( async (req, res) => {
     // return res
 
 
-    const {fullName , email , userName , password,gender,role,personalEmail,rollNo } = req.body
+    const {fullName , email , userName , password,gender,role,personalEmail,rollNo , percentage } = req.body
     console.log("email: ", email , userName , password , gender , role , personalEmail);
 
 
@@ -167,7 +167,8 @@ const registerUser = asyncHandler( async (req, res) => {
         gender,
         role,
         personalEmail,
-        rollNo
+        rollNo,
+        percentage
     })
 
     const createdUser = await User.findById(user._id).select(

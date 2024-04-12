@@ -7,6 +7,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import mongoose from "mongoose";
 import Excel from 'exceljs';
 import stream from 'stream';
+import { generateMail } from "../middlewares/mail.middleware.js";
 
 // import mongoose,{Aggregate, Schema} from "mongoose";
 
@@ -25,7 +26,12 @@ const registerDrive = asyncHandler(async (req, res) => {
     if (!registerDrive) {
         throw new ApiError(500, "Something went wrong while registering the drive !!!")
     }
+
+    const student = await User.findById(user);
+    const drive  = await Drives.findById(drive_id);
+    
     console.log(registerDrive);
+    generateMail(student.email , student.userName , `you have sucessfully registered for ${drive.companyName}.` ,  "For more drive" ,"Click here ",  " " )
     res.status(201).json(
         new ApiResponse(200, registerDrive,"Drive registered successfully")
     )

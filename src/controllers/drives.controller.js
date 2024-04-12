@@ -67,7 +67,7 @@ import { User } from "../models/user.model.js";
 
 
 const createDrive = asyncHandler(async (req, res) => {
-    const { companyName, description, dateToRegister, lastDateToRegister, venue, links } = req.body;
+    const { companyName, description, dateToRegister, lastDateToRegister, venue, links , cutOff } = req.body;
 
     let attachmentslinks = [];
     if (req.files && Array.isArray(req.files.attachments) && req.files.attachments.length > 0) {
@@ -90,6 +90,7 @@ const createDrive = asyncHandler(async (req, res) => {
         lastDateToRegister,
         venue,
         links,
+        cutOff
     });
 
     

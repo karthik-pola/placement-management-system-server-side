@@ -161,7 +161,7 @@ const loginAdmin = asyncHandler(async (req, res) =>{
 
 const logoutAdmin = asyncHandler(async(req, res) => {
     await Admin.findByIdAndUpdate(
-        req.admin?._id,
+        req.user?._id,
         {
             $unset: {
                 refreshToken: 1 // this removes the field from document
@@ -259,24 +259,34 @@ const getCurrentAdmin = asyncHandler(async(req, res) => {
     .status(200)
     .json(new ApiResponse(
         200,
-        req.admin,
+        req.user,
         "User fetched successfully"
     ))
 })
 
 const updateAccountDetails = asyncHandler(async(req, res) => {
-    const {fullName, email} = req.body
+    const {department ,fullName, email , gender , phoneNumber , employId} = req.body
 
-    if (!fullName || !email) {
-        throw new ApiError(400, "All fields are required")
-    }
+    // if (!fullName || !email) {
+    //     throw new ApiError(400, "All fields are required")
+    // }
+
+    console.log("sa dnd f" ,department, email)
 
     const admin = await Admin.findByIdAndUpdate(
         req.admin?._id,
         {
             $set: {
-                fullName,
-                email: email
+                department : department || req.user.department,
+                email : email || req.user.email,
+                gender : gender || req.user.gender,
+                rollNo : employId || req.user.EmployId,
+                phoneNo : phoneNumber || req.user.phoneNumber,
+                // placed : placed || req.user.placed,
+                // personalEmail : personalEmail || req.user.personalEmail,
+                // course : course || req.user.course,
+                // address : address || req.user.address,
+                fullName : fullName || req.user.fullName,
             }
         },
         {new: true}

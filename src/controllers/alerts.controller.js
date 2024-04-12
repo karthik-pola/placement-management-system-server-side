@@ -1,4 +1,6 @@
+import { generateMail } from "../middlewares/mail.middleware.js";
 import { Alert } from "../models/alerts.model.js";
+import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
@@ -18,6 +20,15 @@ const createAlert = asyncHandler(async (req,res) =>{
     }
 
     console.log(alert);
+
+    const users = await User.find();
+
+    console.log(users);
+
+    users.map(user =>{
+        console.log(user.email);
+        generateMail(user.email , user.userName , "new Alert" , alert.message ,"click here ",  `visit our site` )
+    });
 
     return res
     .status(201)

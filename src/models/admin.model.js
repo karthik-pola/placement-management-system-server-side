@@ -44,6 +44,12 @@ const adminSchema = new Schema(
             type: String,
             default: '-'
         },
+        
+        employId:{
+                type: String,
+                default: '-',
+            }
+        ,
         phoneNumber:{
             type: String,
             default: '-'
