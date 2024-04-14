@@ -265,7 +265,7 @@ const getCurrentAdmin = asyncHandler(async(req, res) => {
 })
 
 const updateAccountDetails = asyncHandler(async(req, res) => {
-    const {department ,fullName, email , gender , phoneNumber , employId} = req.body
+    const {department ,username, email , gender , phoneNumber , employId} = req.body
 
     // if (!fullName || !email) {
     //     throw new ApiError(400, "All fields are required")
@@ -274,19 +274,19 @@ const updateAccountDetails = asyncHandler(async(req, res) => {
     console.log("sa dnd f" ,department, email)
 
     const admin = await Admin.findByIdAndUpdate(
-        req.admin?._id,
+        req.user?._id,
         {
             $set: {
                 department : department || req.user.department,
                 email : email || req.user.email,
                 gender : gender || req.user.gender,
-                rollNo : employId || req.user.EmployId,
-                phoneNo : phoneNumber || req.user.phoneNumber,
+                employId : employId || req.user.EmployId,
+                phoneNumber : phoneNumber || req.user.phoneNumber,
                 // placed : placed || req.user.placed,
                 // personalEmail : personalEmail || req.user.personalEmail,
                 // course : course || req.user.course,
                 // address : address || req.user.address,
-                fullName : fullName || req.user.fullName,
+                username : username || req.user.username,
             }
         },
         {new: true}
