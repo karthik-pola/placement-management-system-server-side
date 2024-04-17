@@ -36,17 +36,17 @@ const registerAdmin = asyncHandler( async (req, res) => {
     // return res
 
 
-    const {fullName, email, userName, password } = req.body
+    const {fullName, email, username, password ,employId,gender} = req.body
     //console.log("email: ", email);
 
     if (
-        [fullName, email, userName, password].some((field) => field?.trim() === "")
+        [fullName, email, username, password].some((field) => field?.trim() === "")
     ) {
         throw new ApiError(400, "All fields are required")
     }
 
     const existedAdmin = await Admin.findOne({
-        $or: [{ userName }, { email }]
+        $or: [{ username }, { email }]
     })
 
     if (existedAdmin) {
@@ -79,9 +79,11 @@ const registerAdmin = asyncHandler( async (req, res) => {
         fullName,
         avatar: avatar.url,
         coverImage: coverImage?.url || "",
-        email, 
+        email,
         password,
-        username: userName.toLowerCase()
+        username: username.toLowerCase(),
+        employId,
+        gender
     })
 
     const createdAdmin = await Admin.findById(admin._id).select(
@@ -255,6 +257,8 @@ const changeCurrentPassword = asyncHandler(async(req, res) => {
 
 
 const getCurrentAdmin = asyncHandler(async(req, res) => {
+
+    console.log("retails");
     return res
     .status(200)
     .json(new ApiResponse(
@@ -364,6 +368,24 @@ const updateAdminCoverImage = asyncHandler(async(req, res) => {
         new ApiResponse(200, admin, "Cover image updated successfully")
     )
 })
+
+
+const getAdminDetails = asyncHandler(async(req,res)=>{
+    // console.log("hiii");
+    const data = await Admin.find();
+    return res.status(200).json(data)
+})
+
+
+const deleteAdmin = asyncHandler(async(req,res) => {
+    const admin_id = req.params.admin_id;
+    const deletedUser = await Admin.findByIdAndDelete(admin_id);
+    if(!deletedUser){
+        return res.status(404).json(new ApiError(400,"admin not found"));
+    }
+
+    res.status(200).json(new ApiResponse(200,deletedUser));
+});
 
 
 // const getUserChannelProfile = asyncHandler(async(req, res) => {
@@ -503,6 +525,8 @@ export {
     updateAccountDetails,
     updateAdminAvatar,
     updateAdminCoverImage,
+    getAdminDetails,
+    deleteAdmin
     // getUserChannelProfile,
     // getWatchHistory
 }

@@ -9,7 +9,9 @@ import {
     updateAdminAvatar, 
     updateAdminCoverImage, 
     // getWatchHistory, 
-    updateAccountDetails
+    updateAccountDetails,
+    getAdminDetails,
+    deleteAdmin
 } from "../controllers/admin.controller.js";
 import {upload} from "../middlewares/multer.middleware.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -32,7 +34,8 @@ router.route("/register").post(
     )
 
 router.route("/login").post(loginAdmin)
-
+router.route("/admin-details").post(getAdminDetails)
+router.route("/deleteUser/:admin_id").delete(deleteAdmin);
 router.route("/logout").post(verifyJWT,  logoutAdmin)
 
 router.route("/refresh-token").post(refreshAccessToken)
