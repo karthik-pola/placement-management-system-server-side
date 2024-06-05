@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import http from 'http';
-import { Server } from 'socket.io';
+
 
 
 const app = express();
@@ -18,24 +18,6 @@ app.use(express.json({limit: "16kb"}))
 app.use(express.urlencoded({extended: true ,limit: "16kb"}))
 app.use(express.static("public"))
 app.use(cookieParser())
-
-
-// WebSocket connection
-// io.on('connection', (socket) => {
-//     console.log('A user connected');
-
-//     // Example: Listen for new notifications from admin
-//     socket.on('newNotification', (notification) => {
-//         // Broadcast the notification to all connected clients (students)
-//         io.emit('newNotification', notification);
-//     });
-
-//     // Handle disconnection
-//     socket.on('disconnect', () => {
-//         console.log('User disconnected');
-//     });
-// });
-
 
 
 
