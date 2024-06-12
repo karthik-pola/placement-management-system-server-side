@@ -78,8 +78,6 @@ const drivesRegistered = asyncHandler(async (req, res) => {
             {
                 $group: {
                     _id: "$_id",
-                    // fullName: { $first: "$fullName" }, // Assuming you have a field named fullName in the User model
-                    // drivesRegistered: { $push: "$drivesRegistered" },
                     driveDetails: { $push: "$driveDetails" }
                 }
             },
@@ -96,48 +94,7 @@ const drivesRegistered = asyncHandler(async (req, res) => {
 });
 
 
-// const drivesRegisteredByStudent = asyncHandler(async(req, res) =>{
-//     const  user = req.user;
-//     const data = await User.aggregate([
-//         {
-//             $match: {
-//                 _id: user._id
-//             }
-//         },
-//         {
-//             $lookup: {
-//                 from: "drivesregisters",
-//                 localField: "_id",
-//                 foreignField: "user",
-//                 as: "drivesRegistered"
-//             }
-//         }
-//     ])
 
-//     console.log(data)
-// })
-
-
-// const drivesRegisteredByStudent = asyncHandler(async(req, res) =>{
-//     const  user = req.user;
-//     const data = await User.aggregate([
-//         {
-//             $match: {
-//                 _id: user._id
-//             }
-//         },
-//         {
-//             $lookup: {
-//                 from: "drivesregisters",
-//                 localField: "_id",
-//                 foreignField: "user",
-//                 as: "drivesRegistered"
-//             }
-//         }
-//     ]);
-
-//     console.log(data);
-// });
 
 
 const drivesRegisteredByStudent = asyncHandler(async (req, res) => {
@@ -150,7 +107,6 @@ const drivesRegisteredByStudent = asyncHandler(async (req, res) => {
         console.log(data[0]);
         res.status(200).json(data);
     } catch (error) {
-        // If an error occurs during the execution of the function, it will be caught here
         console.error('Error fetching drive registration data:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
@@ -200,115 +156,12 @@ const registeredBy  = asyncHandler(async(req, res) => {
 
 
         res.status(200).json(data);
-
-        // const workbook = new Excel.Workbook();
-        // const worksheet = workbook.addWorksheet('DriveDetails');
-
-        // // Add headers to the worksheet
-        // worksheet.columns = [
-        //     { header: 'User Details', key: 'userDetails' }
-        //     // Add more headers as needed
-        // ];
-
-        // // Add data to the worksheet
-        // data.forEach(item => {
-        //     worksheet.addRow({
-        //         userDetails: JSON.stringify(item.userDetails) // Convert userDetails to string or format as needed
-        //         // Add more data as needed
-        //     });
-        // });
-
-        // // Create a buffer stream to write the workbook to
-        // const bufferStream = new stream.PassThrough();
-        // workbook.xlsx.write(bufferStream)
-        //     .then(() => {
-        //         bufferStream.end();
-        //     });
-
-        // // Set response headers for Excel file download
-        // res.setHeader('Content-Disposition', 'attachment; filename="drive_details.xlsx"');
-        // res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-
-        // // Pipe the buffer stream to the response object
-        // bufferStream.pipe(res);
-        
-        //res.status(200).json(data); // Assuming you want to send the data as a response
-
-
-        // const workbook = new Excel.Workbook();
-        // const worksheet = workbook.addWorksheet('DriveDetails');
-
-        // // Dynamically set columns based on userDetails fields
-        // if (data.length > 0 && data[0].userDetails.length > 0) {
-        //     const userDetailsFields = Object.keys(data[0].userDetails[0]);
-        //     worksheet.columns = userDetailsFields.map(field => ({ header: field, key: field }));
-        // }
-
-        // // Add data to the worksheet
-        // data.forEach(item => {
-        //     item.userDetails.forEach(userDetail => {
-        //         worksheet.addRow(userDetail);
-        //     });
-        // });
-
-        // // Create a buffer stream to write the workbook to
-        // const bufferStream = new stream.PassThrough();
-        // workbook.xlsx.write(bufferStream)
-        //     .then(() => {
-        //         bufferStream.end();
-        //     });
-
-        // // Set response headers for Excel file download
-        // res.setHeader('Content-Disposition', 'attachment; filename="drive_details.xlsx"');
-        // res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-
-        // // Pipe the buffer stream to the response object
-        // bufferStream.pipe(res);
-
-
         
     } catch (error) {
         throw new ApiError(500, "Error fetching drive details", error);
     }
 });
 
-
-
-
-// import { DrivesRegister } from './path/to/drivesRegisterModel';
-
-// const fetchUsersByDriveId = asyncHandler(async(req , res) => {
-//     const driveId = req.body.drive_id;
-//     console.log(driveId);
-//     try {
-//         const users = await DrivesRegister.aggregate([
-//             {
-//                 $match: {
-//                     company: new mongoose.Types.ObjectId(driveId) // Assuming driveId is provided by the user
-//                 }
-//             },
-//             {
-//                 $lookup: {
-//                     from: 'users', // Assuming the collection name is 'users' where user details are stored
-//                     localField: 'user',
-//                     foreignField: '_id',
-//                     as: 'userDetails'
-//                 }
-//             },
-//             {
-//                 $project: {
-//                     userDetails: 1 // Project only the userDetails field
-//                 }
-//             }
-//         ]);
-//         // return users;
-//         console.log(users);
-//         res.status(200).json(users);
-//     } catch (error) {
-//         console.error('Error fetching users:', error);
-//         throw error;
-//     }
-// })
 
 
 const fetchUsersByDriveId = asyncHandler(async(req , res) => {

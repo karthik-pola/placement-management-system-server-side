@@ -4,8 +4,8 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
-import nodemailer from 'nodemailer';
-import Mailgen from "mailgen";
+// import nodemailer from 'nodemailer';
+// import Mailgen from "mailgen";
 import { generateMail } from "../middlewares/mail.middleware.js";
 import { User } from "../models/user.model.js";
 
@@ -141,7 +141,7 @@ const updateDrive = asyncHandler(async (req, res) => {
     // const id = new mongoose.Types.ObjectId(driveId)
     // Assuming driveId is defined somewhere in your code
 
-    console.log("dsbjdbfbh" ,companyName);
+    // console.log("dsbjdbfbh" ,companyName);
     const existingDrive = await Drives.findByIdAndUpdate(driveId , 
     {
         $set: {
@@ -156,115 +156,11 @@ const updateDrive = asyncHandler(async (req, res) => {
     {new:true}
     );
 
-//     if (!existingDrive) {
-//         return res.status(404).json(ApiResponse(404, {}, "Drive not found"));
-//     }
 
-//     if (companyName && existingDrive.companyName !== companyName) {
-//         existingDrive.companyName = companyName;
-//     }
-//     if (description && existingDrive.description !== description) {
-//         existingDrive.description = description;
-//     }
-//     // Handle attachments if needed
-//     // ...
-
-//     if (dateToRegister && existingDrive.dateToRegister !== dateToRegister) {
-//         existingDrive.dateToRegister = dateToRegister;
-//     }
-//     if (lastDateToRegister && existingDrive.lastDateToRegister !== lastDateToRegister) {
-//         existingDrive.lastDateToRegister = lastDateToRegister;
-//     }
-//     if (venue && existingDrive.venue !== venue) {
-//         existingDrive.venue = venue;
-//     }
-//     if (links && existingDrive.links !== links) {
-//         existingDrive.links = links;
-//     }
-
-//     try {
-//         await existingDrive.save({ validateBeforeSave: false });
-//         return res.status(200).json(new ApiResponse(200, { drive: existingDrive }, "Drive updated successfully"));
-//     } catch (error) {
-//         // Handle validation or save errors
-//         return res.status(500).json(new ApiResponse(500, {}, "Internal server error"));
-//     }
-// });
 
     return res.status(200).json(new ApiResponse(200, existingDrive, "Drive updated successfully"));
 });
 
-
-// const getDrive = asyncHandler(async(req, res)=>{
-//     const drives = await Drives.find();
-//     const user = req?.user;
-//     if(user.role === 'admin'){
-//     if (!drives.length) {
-//         throw new ApiError(404, "Drive not found");
-//     }
-//     return res.status(200).json(new ApiResponse(200, { drive: drives}));
-//     }
-//     else{
-//         if (!drives.length) {
-//             throw new ApiError(404, "Drive not found");
-//         }
-//         return res.status(200).json(new ApiResponse(200, { drive: drives}));
-//         }   
-//     }
-// );
-
-// const getDrive = asyncHandler(async (req, res) => {
-//     const drives = await Drives.find();
-//     const user = User.findById( req?.user._id);
-//     console.log(user._id);
-    
-//     if (!drives.length) {
-//         throw new ApiError(404, "Drive not found");
-//     }
-
-//     if (user.role === 'admin') {
-//         return res.status(200).json(new ApiResponse(200, { drive: drives }));
-//     } else {
-//         // Filter drives based on cutoff percentage
-//         const filteredDrives = drives.filter(drive => drive.cutoff <= user.percentage);
-
-//         if (!filteredDrives.length) {
-//             throw new ApiError(404, "No drives match cutoff percentage");
-//         }
-
-//         return res.status(200).json(new ApiResponse(200, { drive: filteredDrives }));
-//     }
-// });
-
-
-// const getDrive = asyncHandler(async (req, res) => {
-//     const drives = await Drives.find();
-//     const user = req?.user // Await the result of the query
-//     // console.log(user._id);
-
-//     if (!drives.length) {
-//         throw new ApiError(404, "Drive not found");
-//     }
-
-//     if (!user) {
-//         throw new ApiError(404, "User not found");
-//     }
-
-//     if (user.role === 'admin') {
-//         return res.status(200).json(new ApiResponse(200, { drive: drives }));
-//     } else {
-
-//         const student = await User.findById(req?.user._id);
-//         // Filter drives based on cutoff percentage
-//         const filteredDrives = drives.filter(drive <= drive.cutOff <= student.percentage);
-
-//         if (!filteredDrives.length) {
-//             throw new ApiError(404, "No drives match cutoff percentage");
-//         }
-
-//         return res.status(200).json(new ApiResponse(200, { drive: filteredDrives }));
-//     }
-// });
 
 
 const getDrive = asyncHandler(async (req, res) => {
@@ -298,17 +194,6 @@ const getDrive = asyncHandler(async (req, res) => {
         return res.status(200).json(new ApiResponse(200, { drive: filteredDrives }));
     }
 });
-
-
-
-
-
-
-
-
-
-
-
 
 export {
     createDrive,
