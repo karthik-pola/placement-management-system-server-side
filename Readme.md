@@ -1,1 +1,1 @@
-# This ia the backend for placement management system project
+# This is the backend for placement management system project
