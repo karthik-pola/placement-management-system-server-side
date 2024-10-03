@@ -6,8 +6,8 @@ import http from 'http';
 
 
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server);
+//const server = http.createServer(app);
+//const io = new Server(server);
 
 app.use(cors({
     origin: process.env.CORS_ORIGIN,
